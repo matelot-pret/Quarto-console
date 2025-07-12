@@ -5,9 +5,10 @@
 Ce projet implémente le jeu de **Quarto** en langage C. Il s'agit d'un projet réalisé dans le cadre du cours de **Méthodes de Programmation**.
 
 Le Quarto est un jeu de stratégie pour deux joueurs qui se joue sur un plateau de 4×4 cases avec 16 pièces différentes. Chaque pièce possède 4 caractéristiques binaires :
+
 - **Taille** : grande ou petite
 - **Forme** : carrée ou ronde
-- **Couleur** : claire ou foncée  
+- **Couleur** : claire ou foncée
 - **Surface** : pleine ou creuse
 
 ## Objectif du jeu
@@ -33,10 +34,12 @@ La particularité du Quarto est que c'est l'adversaire qui choisit la pièce que
 ## Compilation et exécution
 
 ### Prérequis
+
 - Compilateur C (gcc, clang, ou Visual Studio)
 - Make (optionnel)
 
 #### Installation d'un compilateur C sur Windows
+
 1. **MinGW-w64** : Télécharger depuis [mingw-w64.org](https://www.mingw-w64.org/)
 2. **MSYS2** : Télécharger depuis [msys2.org](https://www.msys2.org/) puis installer gcc avec `pacman -S mingw-w64-x86_64-gcc`
 3. **Visual Studio Community** : Télécharger depuis [visualstudio.microsoft.com](https://visualstudio.microsoft.com/)
@@ -45,6 +48,7 @@ La particularité du Quarto est que c'est l'adversaire qui choisit la pièce que
 ### Compilation manuelle
 
 #### Sur Linux/macOS
+
 ```bash
 # Compilation simple
 gcc -o play src/play.c src/fonctions.c
@@ -57,6 +61,7 @@ make
 ```
 
 #### Sur Windows
+
 ```powershell
 # Avec gcc (si installé via MinGW ou MSYS2)
 gcc -o play.exe src/play.c src/fonctions.c
@@ -72,12 +77,15 @@ clang -o play.exe src/play.c src/fonctions.c
 ```
 
 ### Exécution
+
 #### Linux/macOS
+
 ```bash
 ./play
 ```
 
 #### Windows
+
 ```powershell
 ./play.exe
 # ou simplement
@@ -96,6 +104,7 @@ play
 ## Structures de données principales
 
 ### Structure Pawn
+
 ```c
 typedef struct {
     char length;  // Taille de la pièce
@@ -126,6 +135,7 @@ typedef struct {
 ## Développement
 
 Ce projet a été développé dans le cadre pédagogique pour apprendre :
+
 - La programmation structurée en C
 - La gestion des structures de données
 - L'algorithme de détection de victoire
