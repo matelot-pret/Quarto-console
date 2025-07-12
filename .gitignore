@@ -1,0 +1,71 @@
+# Executables
+*.exe
+*.out
+*.app
+play
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Archives (zip files created by students)
+*.zip
+*.tar.gz
+*.rar
+
+# IDE files
+.vscode/
+.vs/
+*.vcxproj*
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+
+# Fossil repository files
+*.fossil
+
+# Build directories
+build/
+bin/
+obj/
+debug/
+release/
+
+# Log files
+*.log

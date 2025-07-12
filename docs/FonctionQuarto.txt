@@ -1,0 +1,377 @@
+//resultat : affiche le menu du jeu
+PROCEDURE displayMenu()
+	ECRIRE("===QUARTO===")
+	ECRIRE(" ")
+	ECRIRE(" ")
+	ECRIRE("Veuillez choisir une option")
+	ECRIRE("1- LANCER UNE PARTIE")
+	ECRIRE("2- RÈGLES DU JEU")
+	ECRIRE(" ")
+	ECRIRE("0- QUITTER LE JEU")
+	ECRIRE(" ")
+
+FINPROCEDURE
+
+//pre : userInput est déjà initialisé
+//post : userInput reste inchangé
+//res : retourne VRAI si userInput est valid sinon retourne FAUX
+FONCTION ifUserInputIsValid(userInput : caractere, min : caractere, max : caractere) booléen
+	valid : booléen 
+	valid : FAUX
+	SI(userInput >= min ET userInput <= max) ALORS 
+		valid <- VRAI
+	FINSI
+	
+	RETOURNE valid
+FINFONCTION 
+
+//res : prend l'entrée utilisateur, redemande tant qu'elle n'est pas valide et la retourne
+FONCTION getUserInput(min : caractere, max : caractere) entier
+
+	charInput : caractere
+	chaine : texte
+	valid : entier
+	valid <- 0
+
+	TANTQUE(valid = 0)REPETER
+		LIRE(chaine)
+		SI(chaine = " ")ALORS
+			ECRIRE("[ERR] ENTREE INVALIDE ! Votre réponse ne peut pas être vide")
+			ECRIRE("Veuillez ressayer : ")
+		SINON SI(getLastCharOfText(chaine) <> "\n")ALORS
+			ECRIRE("[ERR] ENTREE INVALIDE Votre réponse est trop longue")
+			ECRIRE("Veuillez reessayer : ")
+		SINON 
+			charInput <- getFirstletterOfText(chaine)
+			SI (ifUserInputIsValid(charInput, min, max) = FAUX) ALORS
+				ECRIRE("[ERR] ENTREE INVALIDE. Entrer une valeur entre ", min " et " max)
+				ECRIRE("Veuillez réessayer :")
+			SINON
+				valid <- 1
+			FINSI
+		FINSI
+	FINTANTQUE
+
+	RETOURNE charInput - '0'
+FINFONCTION
+
+//pre : chaine est un texte d'au moins 1 caractere
+//post : chaine n'est pas modifié
+//res : retourne le premier caractère de chaine
+FONCTION getFirstletterOfText(chaine : texte) caractere
+
+//pre : chaine est un texte d'au moins 1 caractere
+//post : chaine n'est pas modifié
+//res : retourne le dernier caractere de chaine
+FONCTION getLastCharOfText(chaine : texte) caractere
+
+//resultat : affiche les règles du jeu
+PROCEDURE displayRules()
+	ECRIRE("Le but est d'aligner quatre pièces partageant au moins une caractéristique commune")
+	ECRIRE("parmi les suivantes : Hauteur(haute ou basse), Couleur(Claire ou foncée)")
+	ECRIRE("Forme(Ronde ou Carrée), Remplissage(Plain ou creux), le premier qui y arrives gagne la partie")
+	ECRIRE("Si aucun des deux joeurs ny arrive avant que le nombre de pion libre ne soit épuisé, il ya égalité")
+FINPROCEDURE
+
+//pre : whoHisTurn est déjà initialisé
+//post : whoHisTurn est modifié
+//res : affiche la nouvelle valeur de whoHisTurn
+FONCTION changePlayer(ADR whoHisTurn : texte) texte
+	SI(whoHisTurn = "Joueur 1")ALORS
+		whoHisTurn <- "Joueur 2"
+	SINON
+		whoHisTurn <- "Joueur 1"
+	FINSI
+
+	RETOURNE whoHisTurn
+FINPROCEDURE
+
+//pre : array n'est pas initialisé, p est déjà initialisé
+//post : array est modifié et initialisé avec p
+PROCEDURE initGameBoardWithEmptyPawn(ADR array : tableau[N] de Pawn, p : Pawn)
+	i : entier
+	j : entier
+	POUR(i <- 0; i < N; i <- i+1)REPETER
+		POUR(j <- 0; j < N; j <- j+1)REPETER
+			array[i][j] <- p
+		FINPOUR 
+	FINPOUR
+FINPROCEDURE
+
+/pre : list n'est pas initialisé, N est initialisé et N > 0
+//post : list est modifié et N reste inchangé
+PROCEDURE initListOfPawn(ADR list : tableau[N] de Pawn, N : entier)
+	nbTour : entier
+	nbTour <- (N*N)/8
+	limit : entier 
+	limit <- (N*N)/2
+	i : entier
+	j : entier
+	j <- 0
+	length : caractere
+	length <- 'G'
+	POUR(i <- 1; i <= nbTour; i <-i +1)REPETER
+		TANTQUE(j < limit)REPETER
+			list[j].taille <- length
+			j <- j+1
+		FINTANTQUE
+		limit <- limit + limit
+		length <- 'P'
+	FINPOUR
+
+	form : caractere 
+	form <- 'R'
+	j <- 0
+	nbTour <- (N*N)4
+	limit <- nbTour
+	POUR(i <- 1; i <= nbTour; i <- i+1)REPETER
+		TANTQUE(j < limit)REPETER
+			list[j].form <- form
+			j <- j+1
+		FINTANTQUE
+		limit <- limit + 4
+		SI(form = 'R')ALORS
+			form <- 'C'
+		SINON
+			form <- 'R'
+		FINSI
+	FINPOUR
+
+	nbTour <- (N*N)/2
+	limit <- (N*N)/8
+	j <- 0
+	color : caractere
+	color <- 'J'
+	POUR(i <- 1; i <= nbTour; i <- i +1)REPETER
+		TANTQUE(j < limit)REPETER
+			list[j].color <- color
+			j <- j +1
+		FINTANTQUE
+		limit <- limit + 2
+		SI(color = 'J')ALORS
+			color <- 'B'
+		SINON
+			color <- 'J'
+		FINSI
+	FINPOUR
+
+	fill : caractere
+	fill <- 'E'
+	j <- 0
+	limit <- N*N
+	TANTQUE(j < limit)REPETER
+		list[j].fill <- fill
+		j <- j+1
+		SI(fill = 'E')ALORS
+			fill <- 'T'
+		SINON
+			fill <- 'E'
+		FINSI
+	FINTANTQUE
+FINPROCEDURE
+
+//pre : tab est initialisé, interval est initialisé et interval > 0, index est initialisé et index >= 0
+//post : tab et interval modifé sont modifié, index reste inchangé
+//res : retourne un nouvel interval
+PROCEDURE reduceInterval(ADR tab : tableau[N] de Pawn, ADR interval: entier, index : entier)
+	temp : Pawn
+	temp <- tab[index]
+	tab[index] <- tab[interval]
+	tab[interval] <- temp
+	interval <- interval - 1
+FINPROCEDURE
+
+//res : affiche les éléments de list compris entre l'indice 0 et interval inclus
+PROCEDURE displayListOfPawn(list : tableau[N] de Pawn, interval : entier)
+	i : entier
+	POUR(i <- 0; i <= interval; i <- i + 1)REPETER
+		ECRIRE(i+1, "- ", list[i].length, list[i].form, liste[i].color, list[i].fill)
+		ECRIRE(" ")
+	FINPOUR
+FINPROCEDURE
+
+r//es : affiche le plateau de jeu
+PROCEDURE displayGameBoard(tab : tableau[N][N] de Pawn)
+	i : entier
+	j : entier
+	POUR(i <- 0; i < N; i <- i+1) REPETER
+		POUR(j <- 0; j < N; j <- j+1)REPETER
+			SI(tab[i][j].taille = '0')ALORS
+				ECRIRE("VIDE")
+			SINON 
+				ECRIRE(tab[i][j].length, tab[i][j].form, tab[i][j].color, tab[i][j].fill)
+			FINSI
+		FINPOUR
+	FINPOUR
+FINPROCEDURE
+
+//res : demande la ligne où mettre le pion et retourner ce nombre 
+FONCTION getLine()entier
+	ECRIRE("Les numéros de ligne vont de 1 à 4.")
+	ECRIRE("Veuillez entrer le numéro de la ligne où vous voulez placer le pion.")
+	min : entier
+	max : entier
+	min <- '1'
+	max <- '4'
+	line : entier
+	line <- getUserInput(min, max)
+	RETOURNE line
+FINFONCTION
+
+//res : demande la colonne où mettre le pion et retourner ce nombre
+FONCTION getColumn()entier
+	ECRIRE("Les colonnes vont de 1 à 4.")
+	ECRIRE("Veuillez entrer le numéro de la colonne où vous voulez le placer.")
+	min : entier 
+	max : entier
+	column : entier
+	column <- getUserInput(min, max)
+	RETOURNE column
+FINFONCTION
+
+//pre : tab, line et column sont déjà initialisé et line > 0, column > 0
+//post : tab, line et column restent inchangés
+//res : retourn VRAI si la case à l'emplacement line column est vide et FAUX sinon
+FONCTION checkIfLineAndColumnIsValid(tab : tableau[N][N] de Pawn, line : entier, column : entier) booléen
+	RETOURNE tab[line][column].length == '0'
+FINFONCTION
+
+//pre : tab, line et column sont déjà initialisé et strictement supérieur à 0
+//post : tab, line et column ne sont pas modifié
+//res : retourne VRAI si la ligne line contient un pion vide et FALSE sinon
+FONCTION checkifEmpty(tab : tableau[N][N] de Pawn, line : entier, column : entier) booléen 
+	empty : booléen
+	empty <- FAUX
+	i : entier
+	POUR(i <- 0; i < N ET empty = FAUX; i <- i+1)REPETER
+		SI(tableau[line-1][i].length = '0')ALORS
+			empty <- VRAI
+		FINSI
+	FINPOUR
+
+	POUR(i <- 0; i < N ET empty = FAUX; i <- i+1)REPETER
+		SI(tableau[i][column-1].length = '0')ALORS
+			empty <- VRAI
+		FINSI
+	FINPOUR
+
+	RETOURNE empty
+FINFONCTION
+
+//pre : tab, N et column sont déjà initialisé et strictement supérieur à 0
+//post : tab, N et column ne sont pas modifié
+//res : retourne VRAI si les pions de la ligne ont une caractéristques en commun et FALSE sinon
+FONCTION ifPawnInLineAreEqual(tab : tableau[N][N] de Pawn, N : entier, column : entier)booléen
+	equal : booléen
+	equal <- VRAI
+	i : entier
+	j : entier
+	POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+		POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+			SI(tab[i][column-1].length <> tab[]j[column-1].length)
+				equal <- FAUX
+			FINSI
+		FINPOUR
+	FINPOUR
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[i][column-1].form <> tab[j][column-1].form)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[i][column-1].color <> tab[j][column-1].color)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[i][column-1].fill <> tab[j][column-1].fill)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+	RETOURNE equal
+FINFONCTION
+
+/pre : tab, N et line sont déjà initialisé et strictement supérieur à 0
+//post : tab, N et line ne sont pas modifié
+//res : retourne VRAI si les pions de la colonne ont une caractéristques en commun et FAUX sinon
+FONCTION ifPawnInColumnAreEqual(tab : tableau[N][N] de Pawn, N : entier, line : entier)booléen
+	equal : booléen
+	equal <- VRAI
+	i : entier
+	j : entier
+	POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+		POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+			SI(tab[line][i].length <> tab[line][i].length)
+				equal <- FAUX
+			FINSI
+		FINPOUR
+	FINPOUR
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[line][i].form <> tab[line][i].form)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[line][i].color <> tab[line][i].color)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+	SI(equal = FAUX)ALORS
+		equal <- VRAI
+		POUR(i <- 0; i < N && equal = VRAI; i <- i+1)REPETER
+			POUR(j <- 1; j < N && equal = VRAi; j <- j+1)
+				SI(tab[line][i].fill <> tab[line][i].fill)
+					equal <- FAUX
+				FINSI
+			FINPOUR
+		FINPOUR
+	FINSI
+
+	RETOURNE equal
+FINFONCTION
+
+/pre : tab, column, N et line sont déjà initialisé et strictement supérieur à 0
+//post : tab, column, N et line ne sont pas modifié
+//res : retourne VRAI si les pions sur la ligne ou sur la colonne partagent une caractéristique sinon retourne FAUX
+FONCTION ifWin(tab : tableau[N][N] de Pawn, line : entier, column : entier, N entier)booleen
+	win : booleen
+	win <- FAUX
+	SI(ifPawnInColumnAreEqual(tab, N, line) = VRAI OU ifPawnInLineAreEqual(tab, N, column)= VRAI) ALORS
+		win <- VRAI 
+	FINSI
+
+	RETOURNE win
+FINFONCTION
+

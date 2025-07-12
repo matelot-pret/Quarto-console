@@ -1,0 +1,100 @@
+DEBUT 
+	N : entier 
+	N <- 4
+	type Pawn = structure
+		length : caractere
+		form : caractere
+		color : caractere
+		fill : caractere
+	FINSTRUCTURE
+
+	emptyPawn : Pawn
+	emptyPawn.length <- '0'
+	emptyPawn.form <- '0'
+	emptyPawn.color <- '0'
+	emptyPawn.fill <- '0'
+
+	gameBoard : tableau[N][N] de Pawn 
+	initGameBoardWithEmptyPawn(gameBoard, emptyPawn)
+
+	listOfPawn : tableau[N*N] de Pawn
+	initListOfPawn(listOfPawn, N)
+
+	whoHisTurn : texte 
+	whoHisTurn <- "Joueur 1"
+
+	userInput : entier
+	min : caractere
+	max : caractere
+	displayMenu()
+	ECRIRE("Veuillez entrer votre choix")
+	min <- '0'
+	max <- '2'
+	userInput <- getUserInput(min, max)
+	TANTQUE(userInput <> 0) REPETER	
+		TANTQUE(userInput = 2 )REPETER
+			displayRules()
+			ECRIRE("Entrer 1 pour retourner au menu")
+			ECRIRE("Entrer 0 pour quitter le jeu")
+			entry : caractere
+			LIRE(entry)
+			TANTQUE(entry <> '1' ET entry <> '0') REPETER
+				ECRIRE("ENTREE INVALIDE ! Entrez 1 pour retourner au menu ou 0 pour quitter le jeu")
+				LIRE(entry)
+			FINTANTQUE
+			min <- '0'
+			max <- '2'
+			SI(entry = '1')ALORS
+				displayMenu()
+				userInput <- getUserInput(min, max)
+			SINON 
+				userInput <- entry - '0'
+			FINSI
+		FINTANTQUE
+
+		SI(userInput = 1)ALORS
+			win : booleen
+			win <- FAUX
+			intervalLimit : entier
+			intervalLimit <- N-1
+			aleatoire(0, intervalLimit)
+
+			TANTQUE(win = FAUX ET intervalLimit > 1)
+				ECRIRE( changePlayer(whoHisTurn), "Veuillez choisir le pion de votre adversaire")
+				displayListOfPawn(ListOfPawn, intervalLimit)
+				ECRIRE("Entrez le nombre de votre choix :)
+				min <- '0'
+				max <- intervalLimit + '0'
+				indexOfPawn : entier
+				indexOfPawn <- getUserInput(min, max)
+				selectedPawn : Pawn
+				selectedPawn <- listOfPawn[indexOfPawn -1]
+				displayGameBoard(gameBoard)
+				ECRIRE(whoHisTurn, "pour placer le pion")
+			
+				line : entier
+				line <- getLine()
+				column : entier
+				column <- getColumn()
+				TANTQUE(checkIfLineAndColumnIsValid(gameBoard, line, column) = FAUX)REPETER
+					ECRIRE("L'emplacement selectionné n'est pas vide")
+					ECRIRE("Veuillez reessayer")
+					line <- getLine()
+					column <- getColumn()
+				FINTANTQUE
+				gameBoard[line-1][column-1] <- selectedPawn
+
+				SI(checkifEmpty(gameBoard, line, column) = FAUX)ALORS
+					win <- ifWin(gameBoard, line, column, N)
+				FINSI			
+
+				reduceInterval(listOfPawn, intervalLimit, indexOfPawn)	
+			FINTANTQUE
+		FINSI
+
+	FINTANTQUE
+	SI(userInput = 0) ALORS
+		ECRIRE("Vous avez quitter le jeu")
+	FINSI
+
+FIN
