@@ -1,5 +1,9 @@
 # Jeu de Quarto
 
+![Language](https://img.shields.io/badge/language-C-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
+![License](https://img.shields.io/badge/license-Educational-green.svg)
+
 ## Description
 
 Ce projet implémente le jeu de **Quarto** en langage C. Il s'agit d'un projet réalisé dans le cadre du cours de **Méthodes de Programmation**.
