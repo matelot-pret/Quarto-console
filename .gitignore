@@ -3,6 +3,7 @@
 *.out
 *.app
 play
+play.exe
 
 # Object files
 *.o

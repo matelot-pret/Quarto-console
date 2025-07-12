@@ -36,18 +36,52 @@ La particularité du Quarto est que c'est l'adversaire qui choisit la pièce que
 - Compilateur C (gcc, clang, ou Visual Studio)
 - Make (optionnel)
 
+#### Installation d'un compilateur C sur Windows
+1. **MinGW-w64** : Télécharger depuis [mingw-w64.org](https://www.mingw-w64.org/)
+2. **MSYS2** : Télécharger depuis [msys2.org](https://www.msys2.org/) puis installer gcc avec `pacman -S mingw-w64-x86_64-gcc`
+3. **Visual Studio Community** : Télécharger depuis [visualstudio.microsoft.com](https://visualstudio.microsoft.com/)
+4. **Clang** : Télécharger depuis [llvm.org](https://llvm.org/)
+
 ### Compilation manuelle
+
+#### Sur Linux/macOS
 ```bash
 # Compilation simple
 gcc -o play src/play.c src/fonctions.c
 
 # Avec options de debug
 gcc -Wall -Wextra -g -o play src/play.c src/fonctions.c
+
+# Avec make
+make
+```
+
+#### Sur Windows
+```powershell
+# Avec gcc (si installé via MinGW ou MSYS2)
+gcc -o play.exe src/play.c src/fonctions.c
+
+# Avec Visual Studio (cl.exe)
+cl /Fe:play.exe src/play.c src/fonctions.c
+
+# Avec clang (si installé)
+clang -o play.exe src/play.c src/fonctions.c
+
+# Compilation automatique (détecte le compilateur disponible)
+./compile.bat
 ```
 
 ### Exécution
+#### Linux/macOS
 ```bash
 ./play
+```
+
+#### Windows
+```powershell
+./play.exe
+# ou simplement
+play
 ```
 
 ## Fonctionnalités
